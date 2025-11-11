@@ -15,10 +15,12 @@ import {
 import { Input } from "@/components/ui/input"
 import { SignupValidation } from "@/lib/validation"
 import type z from "zod"
+import Loader from "@/components/shared/Loader"
+import { Link } from "react-router-dom"
 
 
 const SignupForm = () => {
-  const isLoading = true; 
+  const isLoading = false; 
 
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -36,10 +38,10 @@ const SignupForm = () => {
 
   return (
     <Form {...form}>
-      <div className="flex flex-col sm:w-420 flex-center">
+      <div className="flex-col sm:w-420 flex-center">
         <img src="/assets/images/logo.svg" alt="logo" />
         <h2 className="pt-5 h3-bold md:h2-bold sm:pt-12">Create a new account</h2>
-        <p className="mt-2 text-light-3 small-medium md:base-regular">To use Snapgram enter your accounts details</p>
+        <p className="mt-2 text-light-3 small-medium md:base-regular">To use Snapgram, please enter your accounts details</p>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 mt-4">
           <FormField
             control={form.control}
@@ -95,10 +97,15 @@ const SignupForm = () => {
           />
           <Button type="submit" className="shad-button_primary">
             {
-              isLoading ? <div className="flex gap-2 flex-center">Loading...</div> :
+              isLoading ? <div className="gap-2 flex-center">
+                  <Loader /> Loading...
+                </div> :
               "Sign Up"
             }
           </Button>
+          <p className="mt-2 text-center text-small-regular text-light-2">
+            Already have an account? <Link to="/sign-in" className="ml-1 text-primary-500 text-small-semibold">Log In</Link>
+          </p>
         </form>
       </div>
     </Form>
