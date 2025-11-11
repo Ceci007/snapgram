@@ -1,6 +1,5 @@
 "use client"
 
-import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
@@ -14,47 +13,95 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { SignupValidation } from "@/lib/validation"
+import type z from "zod"
 
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-})
 
 const SignupForm = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const isLoading = true; 
+
+  const form = useForm<z.infer<typeof SignupValidation>>({
+    resolver: zodResolver(SignupValidation),
     defaultValues: {
+      name: "",
       username: "",
+      email: "",
+      password: ""
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof SignupValidation>) {
     console.log(values)
   }
 
   return (
-    <div>
-      <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
+    <Form {...form}>
+      <div className="flex flex-col sm:w-420 flex-center">
+        <img src="/assets/images/logo.svg" alt="logo" />
+        <h2 className="pt-5 h3-bold md:h2-bold sm:pt-12">Create a new account</h2>
+        <p className="mt-2 text-light-3 small-medium md:base-regular">To use Snapgram enter your accounts details</p>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col w-full gap-5 mt-4">
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input type="text" className="shad-input" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input type="text" className="shad-input" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" className="shad-input" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" className="shad-input" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="shad-button_primary">
+            {
+              isLoading ? <div className="flex gap-2 flex-center">Loading...</div> :
+              "Sign Up"
+            }
+          </Button>
+        </form>
+      </div>
     </Form>
-    </div>
   )
 }
 
